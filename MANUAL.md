@@ -24,7 +24,7 @@ Features
 Requirements
 ------------
 
-* A Wolfram [*Mathematica*][wmma] product (*Mathematica*, gridMathematica, Wolfram Finance Platform).
+* A Wolfram [*Mathematica*][wmma] product (Mathematica, gridMathematica, Wolfram Finance Platform).
 * OpenSSH client and server under Linux and OS X.
 * [PuTTY][putty] on a Windows *Mathematica* front end machine.
 * An SSH server on a remote Windows *Mathematica* kernel machine (see below).
@@ -231,6 +231,9 @@ Then, to launch a remote compute kernel, enter:
 
 Replace the example remote host specification `john@host.example.com` with your actual remote host.
 
+The remote host specification uses the syntax `[user[:password]@]remote_machine[:port]`.
+Valid examples are `192.168.1.10:2222`, `john@host.local` or `john:123456@host.example.com`.
+
 Alternatively, the template command in `$RemoteCommand` can also be specified as part of the
 `RemoteMachine` specifier:
 
@@ -245,6 +248,9 @@ See [Launching and Connecting][connectionmethods] for more information.
 Troubleshooting
 ---------------
 
+First, double check that the Tunnel scripts are correctly installed on both the local front end
+and on the remote kernel machine.
+
 If connecting to the remote kernel from the *Mathematica* front end with Tunnel does not succeed,
 it is a good idea to check if a remote *Mathematica* kernel can be launched from the command line.
 
@@ -254,7 +260,7 @@ Under Linux or OS X, use the OpenSSH client `ssh` to try to connect to the remot
     Mathematica 10.1.0 for Linux x86 (64-bit)
     Copyright 1988-2015 Wolfram Research, Inc.
 
-Under Windows, use the PuTTY command line tool `plink` to try to connect to the machine:
+Under Windows, use the PuTTY command line tool `plink` to try to connect to the remote machine:
 
     C:\>plink john@host.example.com /usr/local/Wolfram/Mathematica/10.1/Executables/MathKernel
     Mathematica 10.1.0 for Linux x86 (64-bit)
