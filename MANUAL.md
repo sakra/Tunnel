@@ -1,7 +1,7 @@
-Tunnel
-======
+Tunnel Manual
+=============
 
-Tunnel is a set of scripts that simplifies launching remote *Mathematica* kernels, where all
+Tunnel is a set of scripts that simplify launching remote *Mathematica* kernels, where all
 established MathLink connections are automatically tunneled through a secure shell connection.
 
 Tunnel is an improved version of the [Remote Kernel Strategies][remote_kernel_strategies] solution
@@ -248,8 +248,11 @@ See [Launching and Connecting][connectionmethods] for more information.
 Troubleshooting
 ---------------
 
-First, double check that the Tunnel scripts are correctly installed on both the local front end
+First, double-check that the Tunnel scripts are correctly installed on both the local front end
 and on the remote kernel machine.
+
+If the *Mathematica* front end machine runs Linux or OS X, double-check that the executable bit of
+the scripts `tunnel.sh` and `tunnel_sub.sh` is set.
 
 If connecting to the remote kernel from the *Mathematica* front end with Tunnel does not succeed,
 it is a good idea to check if a remote *Mathematica* kernel can be launched from the command line.
@@ -277,7 +280,7 @@ For troubleshooting purposes, the tunnel script files generate a separate log fi
 
 If you are using OpenSSH on the server side, it may be helpful to temporarily increase the log
 level of `sshd`. Open the `sshd` config file (usually `/etc/sshd_config`), locate the setting for
-`LogLevel` and change it to
+`LogLevel`, then change it to
 
     LogLevel DEBUG3
 

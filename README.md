@@ -1,7 +1,7 @@
 Tunnel
 ======
 
-Tunnel is a set of scripts that simplifies launching remote *Mathematica* kernels where all
+Tunnel is a set of scripts that simplify launching remote *Mathematica* kernels where all
 established MathLink connections are automatically tunneled through a secure shell connection.
 
 Features
@@ -17,7 +17,7 @@ Features
 Requirements
 ------------
 
-* A Wolfram [*Mathematica*][wmma] product (*Mathematica*, gridMathematica, Wolfram Finance Platform).
+* A Wolfram [*Mathematica*][wmma] product (Mathematica, gridMathematica, Wolfram Finance Platform).
 * OpenSSH client and server under Linux and OS X.
 * [PuTTY][putty] on a Windows *Mathematica* front end machine.
 * An SSH server on a remote Windows *Mathematica* kernel machine. See the [Tunnel manual][manual]
@@ -43,7 +43,7 @@ See the [Tunnel manual][manual] for information on
 
  * how to set up remote controller kernel configurations using the Tunnel scripts in the
    *Mathematica* front end kernel configuration options dialog.
- * how to set up remote compute kernels using with the *Mathematica* Parallel package.
+ * how to set up remote compute kernels with the *Mathematica* Parallel package.
  * technical background information.
 
 
