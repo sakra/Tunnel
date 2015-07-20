@@ -2,9 +2,11 @@
 (* See https://github.com/sakra/Tunnel/blob/master/MANUAL.md for usage hints. *)
 (* Copyright 2015 Sascha Kratky, see accompanying license file. *)
 
-Begin["MathLink`Tunnel`"]
+BeginPackage["MathLink`Tunnel`"]
 
-MathLink`CreateFrontEndLinkHost[] := Module[
+Begin["`Private`"]
+
+CreateFrontEndLinkHost[] := Module[
 	{pos,linkName,linkNameComponents,linkHost,IP4AddressPattern,IP4AddrToInteger,candidates},
 	If[ValueQ[$ParentLink] && Head[$ParentLink] === LinkObject,
 		(* extract linkHost from parent link *)
@@ -40,7 +42,7 @@ MathLink`CreateFrontEndLinkHost[] := Module[
 	]
 ]
 
-MathLink`CreateFrontEndLinkName[] := Module[
+CreateFrontEndLinkName[] := Module[
 	{pos,linkName,linkNameComponents},
 	If [ !ValueQ[MathLink`$PortNumber],
 		If[ValueQ[$ParentLink] && Head[$ParentLink] === LinkObject,
@@ -73,15 +75,17 @@ MathLink`CreateFrontEndLinkName[] := Module[
 	]
 ]
 
+(* override built-in function MathLink`CreateFrontEndLink with tunneling aware one *)
+
 Unprotect[MathLink`CreateFrontEndLink]
 
 MathLink`CreateFrontEndLink[] := Module[ {linkName, link},
-	linkName = MathLink`CreateFrontEndLinkName[];
+	linkName = CreateFrontEndLinkName[];
 	link = If [ linkName === Automatic,
 		LinkCreate[
 			LinkMode->Listen,
 			LinkProtocol->MathLink`CreateFrontEndLinkProtocol[],
-			LinkHost -> MathLink`CreateFrontEndLinkHost[] ],
+			LinkHost->CreateFrontEndLinkHost[] ],
 	(*Else*)
 		LinkCreate[
 			linkName,
@@ -89,9 +93,11 @@ MathLink`CreateFrontEndLink[] := Module[ {linkName, link},
 			LinkProtocol->"TCPIP" ]
 	];
 	MathLink`LinkSetPrintFullSymbols[link, True];
-	link
+	Return[link]
 ]
 
 Protect[MathLink`CreateFrontEndLink]
 
 End[]
+
+EndPackage[]
