@@ -6,7 +6,11 @@ BeginPackage["MathLink`Tunnel`"]
 
 SetupTunnelKernelConfiguration::usage = "SetupTunnelKernelConfiguration creates a tunneled controller kernel configuration."
 
+RemoteTunnelMachine::usage = "RemoteTunnelMachine creates a RemoteMachine description for a tunneled compute kernel."
+
 Begin["`Private`"]
+
+Needs["SubKernels`RemoteKernels`"]
 
 CreateFrontEndLinkHost[] := Module[
 	{pos,linkName,linkNameComponents,linkHost,IP4AddressPattern,IP4AddrToInteger,candidates},
@@ -141,6 +145,27 @@ SetupTunnelKernelConfiguration[configName_String, remoteMachine_String, OptionsP
 ]
 
 Options[SetupTunnelKernelConfiguration] = {"OperatingSystem"->Automatic, "VersionNumber"->Automatic, "KernelPath"->Automatic}
+
+RemoteTunnelMachine[remoteMachine_String, kernelCount_Integer:1, OptionsPattern[]] := Module[
+	{tunnelScriptPath},
+	remoteOS = OptionValue["OperatingSystem"] /. { Automatic -> SystemInformation["FrontEnd", "OperatingSystem"] };
+	kernelVersionNumber = OptionValue["VersionNumber"] /. { Automatic -> $VersionNumber };
+	tunnelScriptPath = FileNameJoin[{
+		$UserBaseDirectory, "FrontEnd",
+		If[ $OperatingSystem === "Windows", "tunnel_sub.bat", "tunnel_sub.sh" ]
+	}];
+	kernelPath = OptionValue["KernelPath"] /. {
+		Automatic -> VersionedKernelPath[remoteOS, kernelVersionNumber],
+		Default -> DefaultKernelPath[remoteOS, kernelVersionNumber]
+	};
+	RemoteMachine[
+		remoteMachine, kernelCount,
+		"\"" <> tunnelScriptPath <> "\" \"`1`\" \"" <> kernelPath <> "\" \"`2`\"",
+		LinkHost->"127.0.0.1",
+		KernelSpeed -> OptionValue[KernelSpeed]
+	]
+]
+Options[RemoteTunnelMachine] = {"OperatingSystem"->Automatic, "VersionNumber"->Automatic, "KernelPath"->Automatic, KernelSpeed -> 1}
 
 (* override built-in function MathLink`CreateFrontEndLink with tunneling aware one *)
 
