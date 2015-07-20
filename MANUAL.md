@@ -89,7 +89,7 @@ Install OpenSSH client on the local front end machine:
 
     sudo apt-get install openssh-client
 
-Install an launch OpenSSH server on the remote kernel machine:
+Install and start OpenSSH server on the remote kernel machine:
 
     sudo apt-get install openssh-server
 
