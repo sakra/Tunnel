@@ -4,6 +4,8 @@
 
 BeginPackage["MathLink`Tunnel`"]
 
+SetupTunnelKernelConfiguration::usage = "SetupTunnelKernelConfiguration creates a tunneled controller kernel configuration."
+
 Begin["`Private`"]
 
 CreateFrontEndLinkHost[] := Module[
@@ -74,6 +76,71 @@ CreateFrontEndLinkName[] := Module[
 		ToString[++MathLink`$PortNumber], "@127.0.0.1"}]
 	]
 ]
+
+KernelVersionStr[versionNumber_] := ToString[NumberForm[versionNumber, {3,1}]]
+
+VersionedKernelPath[system_String, versionNumber_] :=
+	Which[
+		system === "MacOSX" && versionNumber >= 10.0,
+			"/Applications/Mathematica " <> KernelVersionStr[versionNumber] <> ".app/Contents/MacOS/WolframKernel",
+		system === "MacOSX",
+			"/Applications/Mathematica " <> KernelVersionStr[versionNumber] <> ".app/Contents/MacOS/MathKernel",
+		system === "Windows" && versionNumber >= 10.0,
+			"C:\\Program Files\\Wolfram Research\\Mathematica\\" <> KernelVersionStr[versionNumber] <> "\\WolframKernel.exe",
+		system === "Windows",
+			"C:\\Program Files\\Wolfram Research\\Mathematica\\" <> KernelVersionStr[versionNumber] <> "\\MathKernel.exe",
+		versionNumber >= 10.0,
+			"/usr/local/Wolfram/Mathematica/" <> KernelVersionStr[versionNumber] <> "/Executables/WolframKernel",
+		True,
+			"/usr/local/Wolfram/Mathematica/" <> KernelVersionStr[versionNumber] <> "/Executables/MathKernel"
+	]
+
+DefaultKernelPath[system_String, versionNumber_] :=
+	Which[
+		system === "MacOSX" && versionNumber >= 10.0,
+			"/Applications/Mathematica.app/Contents/MacOS/WolframKernel",
+		system === "MacOSX",
+			"/Applications/Mathematica.app/Contents/MacOS/MathKernel",
+		system === "Windows" && versionNumber >= 10.0,
+			"WolframKernel.exe",
+		system === "Windows",
+			"MathKernel.exe",
+		versionNumber >= 10.0,
+			"/usr/local/bin/WolframKernel",
+		True,
+			"/usr/local/bin/MathKernel"
+	]
+
+SetupTunnelKernelConfiguration[configName_String, remoteMachine_String, OptionsPattern[]] := Module[
+	{remoteOS,kernelVersionNumber,evaluatorNames,tunnelScriptPath,kernelPath,config,configPos},
+	remoteOS = OptionValue["OperatingSystem"] /. { Automatic -> SystemInformation["FrontEnd", "OperatingSystem"] };
+	kernelVersionNumber = OptionValue["VersionNumber"] /. { Automatic -> $VersionNumber };
+	tunnelScriptPath = If[ SystemInformation["FrontEnd","OperatingSystem"] === "Windows",
+		"`userbaseDirectory`\\FrontEnd\\tunnel.bat",
+		"`userbaseDirectory`/FrontEnd/tunnel.sh"];
+	kernelPath = OptionValue["KernelPath"] /. {
+		Automatic -> VersionedKernelPath[remoteOS, kernelVersionNumber],
+		Default -> DefaultKernelPath[remoteOS, kernelVersionNumber]
+	};
+	config={
+		"RemoteMachine"->True,
+		"TranslateReturns"->True,
+		"AppendNameToCellLabel"->True,
+		"AutoStartOnLaunch"->False,
+		"MLOpenArguments"->"-LinkMode Listen -LinkProtocol TCPIP -LinkOptions MLDontInteract -LinkHost 127.0.0.1",
+		"LoginScript"->"\"" <> tunnelScriptPath <> "\" \"" <> remoteMachine <> "\" \"" <> kernelPath <> "\" \"`linkname`\""
+	};
+	evaluatorNames = EvaluatorNames /. Options[$FrontEnd];
+	configPos = Position[evaluatorNames, Rule[configName, _]];
+	evaluatorNames = If[configPos==={},
+		Append[evaluatorNames, Rule[configName, config]],
+		ReplacePart[evaluatorNames, First[configPos]->Rule[configName, config]]
+	];
+	SetOptions[$FrontEnd, EvaluatorNames->evaluatorNames];
+	Rule[configName, config]
+]
+
+Options[SetupTunnelKernelConfiguration] = {"OperatingSystem"->Automatic, "VersionNumber"->Automatic, "KernelPath"->Automatic}
 
 (* override built-in function MathLink`CreateFrontEndLink with tunneling aware one *)
 
