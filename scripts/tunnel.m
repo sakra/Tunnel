@@ -128,6 +128,8 @@ SetupTunnelKernelConfiguration[configName_String, remoteMachine_String, OptionsP
 		Automatic -> VersionedKernelPath[remoteOS, kernelVersionNumber],
 		Default -> DefaultKernelPath[remoteOS, kernelVersionNumber]
 	};
+	(* there seems to be no way to check if a file exists on the front end machine *)
+	(* therefore check for installed tunnel script only if front end is using a local kernel *)
 	If [ SystemInformation["FrontEnd", "MachineID"] === SystemInformation["Kernel", "MachineID"],
 		StringReplace[tunnelScriptPath, "`userbaseDirectory`" -> $UserBaseDirectory] //
 		If[ Not@FileExistsQ[#], Message[SetupTunnelKernelConfiguration::missing, #] ]&
