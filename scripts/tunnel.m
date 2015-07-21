@@ -160,7 +160,7 @@ RemoteTunnelMachine[remoteMachine_String, kernelCount_Integer:1, OptionsPattern[
 	}];
 	loginScript = If[ $OperatingSystem === "Windows",
 		"\"\"" <> tunnelScriptPath <> "\" \"" <> remoteMachine <> "\" \"" <> kernelPath <> "\" \"`2`\"\"",
-		"\"" <> tunnelScriptPath <> "\" \"" <> remoteMachine <> "\" \"" <> kernelPath <> "\" \"`2`\"" ]
+		"\"" <> tunnelScriptPath <> "\" \"" <> remoteMachine <> "\" \"" <> kernelPath <> "\" \"`2`\"" ];
 	RemoteMachine[ host, loginScript, kernelCount, LinkHost->"127.0.0.1", KernelSpeed->OptionValue[KernelSpeed] ]
 ]
 Options[RemoteTunnelMachine] = {"OperatingSystem"->Automatic, "VersionNumber"->Automatic, "KernelPath"->Automatic, KernelSpeed -> 1}
