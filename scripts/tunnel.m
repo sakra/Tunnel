@@ -5,8 +5,10 @@
 BeginPackage["MathLink`Tunnel`"]
 
 SetupTunnelKernelConfiguration::usage = "SetupTunnelKernelConfiguration creates a tunneled controller kernel configuration."
+SetupTunnelKernelConfiguration::missing = "Required tunnel launch script `1` does not exist."
 
-RemoteTunnelMachine::usage = "RemoteTunnelMachine creates a RemoteMachine description for a tunneled compute kernel."
+RemoteTunnelMachine::usage = "RemoteTunnelMachine creates a parallel kernel RemoteMachine description for a tunneled compute kernel."
+RemoteTunnelMachine::missing = "Required tunnel launch script `1` does not exist."
 
 Begin["`Private`"]
 
@@ -126,6 +128,10 @@ SetupTunnelKernelConfiguration[configName_String, remoteMachine_String, OptionsP
 		Automatic -> VersionedKernelPath[remoteOS, kernelVersionNumber],
 		Default -> DefaultKernelPath[remoteOS, kernelVersionNumber]
 	};
+	If [ SystemInformation["FrontEnd", "MachineID"] === SystemInformation["Kernel", "MachineID"],
+		StringReplace[tunnelScriptPath, "`userbaseDirectory`" -> $UserBaseDirectory] //
+		If[ Not@FileExistsQ[#], Message[SetupTunnelKernelConfiguration::missing, #] ]&
+	];
 	config={
 		"RemoteMachine"->True,
 		"TranslateReturns"->True,
@@ -158,6 +164,7 @@ RemoteTunnelMachine[remoteMachine_String, kernelCount_Integer:1, OptionsPattern[
 		$UserBaseDirectory, "FrontEnd",
 		If[ $OperatingSystem === "Windows", "tunnel_sub.bat", "tunnel_sub.sh" ]
 	}];
+	If[ Not@FileExistsQ[tunnelScriptPath], Message[RemoteTunnelMachine::missing, tunnelScriptPath ] ];
 	loginScript = If[ $OperatingSystem === "Windows",
 		"\"\"" <> tunnelScriptPath <> "\" \"" <> remoteMachine <> "\" \"" <> kernelPath <> "\" \"`2`\"\"",
 		"\"" <> tunnelScriptPath <> "\" \"" <> remoteMachine <> "\" \"" <> kernelPath <> "\" \"`2`\"" ];
