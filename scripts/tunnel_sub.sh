@@ -128,7 +128,14 @@ SSH_OPTS="$SSH_OPTS -R $LOOPBACK_IP_ADDR:$MAIN_LINK_DATA_PORT:$MAIN_LINK_HOST:$M
 SSH_OPTS="$SSH_OPTS -R $LOOPBACK_IP_ADDR:$MAIN_LINK_MESSAGE_PORT:$MAIN_LINK_HOST:$MAIN_LINK_MESSAGE_PORT"
 
 # MathLink options
-REMOTE_KERNEL_OPTS="-mathlink -LinkMode Connect -LinkProtocol TCPIP -LinkName $MAIN_LINK_LOOPBACK"
+# Mathematica kernel version >= 10.0 supports -wstp switch
+if echo $REMOTE_KERNEL_PATH | grep -q "10\."
+then
+	REMOTE_KERNEL_OPTS="-wstp"
+else
+	REMOTE_KERNEL_OPTS="-mathlink"
+fi
+REMOTE_KERNEL_OPTS="$REMOTE_KERNEL_OPTS -LinkMode Connect -LinkProtocol TCPIP -LinkName $MAIN_LINK_LOOPBACK"
 
 # Mathematica kernel options
 # -lmverbose print information to stderr on connecting to the license manager

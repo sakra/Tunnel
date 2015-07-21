@@ -141,7 +141,13 @@ set PUTTY_OPTS=!PUTTY_OPTS! -R !LOOPBACK_IP_ADDR!:!MAIN_LINK_DATA_PORT!:!MAIN_LI
 set PUTTY_OPTS=!PUTTY_OPTS! -R !LOOPBACK_IP_ADDR!:!MAIN_LINK_MESSAGE_PORT!:!MAIN_LINK_HOST!:!MAIN_LINK_MESSAGE_PORT!
 
 rem MathLink options
-set REMOTE_KERNEL_OPTS=-mathlink -LinkMode Connect -LinkProtocol TCPIP -LinkName "%MAIN_LINK_LOOPBACK%"
+rem Mathematica kernel version >= 10.0 supports -wstp switch
+if not "%REMOTE_KERNEL_PATH:10.=%" == "%REMOTE_KERNEL_PATH%" (
+	set REMOTE_KERNEL_OPTS=-wstp
+) else (
+	set REMOTE_KERNEL_OPTS=-mathlink
+)
+set REMOTE_KERNEL_OPTS=!REMOTE_KERNEL_OPTS! -LinkMode Connect -LinkProtocol TCPIP -LinkName "%MAIN_LINK_LOOPBACK%"
 
 rem Mathematica kernel options
 rem force loading of the tunnel kernel init file
