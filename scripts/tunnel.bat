@@ -42,7 +42,8 @@ rem -v      show verbose messages
 rem -ssh    force use of SSH protocol
 rem -x      disable X11 forwarding
 rem -C      enable compression
-set PUTTY_OPTS=-batch -v -ssh -C -x
+rem -A      enable agent forwarding
+set PUTTY_OPTS=-batch -v -ssh -C -A -x
 if exist "%PLINKW_EXE_PATH%" (
 	set PUTTY_PATH=!PLINKW_EXE_PATH!
 	rem Quest PuTTY options:

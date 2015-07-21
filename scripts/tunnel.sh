@@ -76,7 +76,8 @@ fi
 # -x disable X11 forwarding
 # -n prevent reading from stdin
 # -T disable pseudo-tty allocation
-SSH_OPTS="-C -v -x -n -T -o CheckHostIP=no -o StrictHostKeyChecking=no -o ControlMaster=no"
+# -A enable SSH agent forwarding
+SSH_OPTS="-C -v -x -n -T -A -o CheckHostIP=no -o StrictHostKeyChecking=no -o ControlMaster=no"
 
 # parse user credentials from host name
 REMOTE_KERNEL_USER=`echo $REMOTE_KERNEL_ADDRESS | awk -F "[@]" '{print $1}'`
