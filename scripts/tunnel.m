@@ -143,27 +143,25 @@ SetupTunnelKernelConfiguration[configName_String, remoteMachine_String, OptionsP
 	SetOptions[$FrontEnd, EvaluatorNames->evaluatorNames];
 	Rule[configName, config]
 ]
-
 Options[SetupTunnelKernelConfiguration] = {"OperatingSystem"->Automatic, "VersionNumber"->Automatic, "KernelPath"->Automatic}
 
 RemoteTunnelMachine[remoteMachine_String, kernelCount_Integer:1, OptionsPattern[]] := Module[
-	{tunnelScriptPath},
+	{remoteOS,kernelVersionNumber,kernelPath,host,tunnelScriptPath,loginScript},
 	remoteOS = OptionValue["OperatingSystem"] /. { Automatic -> SystemInformation["FrontEnd", "OperatingSystem"] };
 	kernelVersionNumber = OptionValue["VersionNumber"] /. { Automatic -> $VersionNumber };
-	tunnelScriptPath = FileNameJoin[{
-		$UserBaseDirectory, "FrontEnd",
-		If[ $OperatingSystem === "Windows", "tunnel_sub.bat", "tunnel_sub.sh" ]
-	}];
 	kernelPath = OptionValue["KernelPath"] /. {
 		Automatic -> VersionedKernelPath[remoteOS, kernelVersionNumber],
 		Default -> DefaultKernelPath[remoteOS, kernelVersionNumber]
 	};
-	RemoteMachine[
-		remoteMachine, kernelCount,
-		"\"" <> tunnelScriptPath <> "\" \"`1`\" \"" <> kernelPath <> "\" \"`2`\"",
-		LinkHost->"127.0.0.1",
-		KernelSpeed -> OptionValue[KernelSpeed]
-	]
+	host = Last@StringSplit[remoteMachine, "@"];
+	tunnelScriptPath = FileNameJoin[{
+		$UserBaseDirectory, "FrontEnd",
+		If[ $OperatingSystem === "Windows", "tunnel_sub.bat", "tunnel_sub.sh" ]
+	}];
+	loginScript = If[ $OperatingSystem === "Windows",
+		"\"\"" <> tunnelScriptPath <> "\" \"" <> remoteMachine <> "\" \"" <> kernelPath <> "\" \"`2`\"\"",
+		"\"" <> tunnelScriptPath <> "\" \"" <> remoteMachine <> "\" \"" <> kernelPath <> "\" \"`2`\"" ]
+	RemoteMachine[ host, loginScript, kernelCount, LinkHost->"127.0.0.1", KernelSpeed->OptionValue[KernelSpeed] ]
 ]
 Options[RemoteTunnelMachine] = {"OperatingSystem"->Automatic, "VersionNumber"->Automatic, "KernelPath"->Automatic, KernelSpeed -> 1}
 
