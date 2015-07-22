@@ -6,6 +6,7 @@ BeginPackage["MathLink`Tunnel`"]
 
 SetupTunnelKernelConfiguration::usage = "SetupTunnelKernelConfiguration creates a tunneled controller kernel configuration."
 SetupTunnelKernelConfiguration::missing = "Required tunnel launch script `1` does not exist."
+SetupTunnelKernelConfiguration::name = "Invalid configuration name \"`1`\"."
 
 RemoteTunnelMachine::usage = "RemoteTunnelMachine creates a parallel kernel RemoteMachine description for a tunneled compute kernel."
 RemoteTunnelMachine::missing = "Required tunnel launch script `1` does not exist."
@@ -118,8 +119,10 @@ DefaultKernelPath[system_String, versionNumber_] :=
 			"/usr/local/bin/MathKernel"
 	]
 
-SetupTunnelKernelConfiguration[configName_String, remoteMachine_String, OptionsPattern[]] := Module[
-	{operatingSystem,versionNumber,evaluatorNames,tunnelScriptPath,kernelPath,config,configPos},
+SetupTunnelKernelConfiguration[name_String, remoteMachine_String, OptionsPattern[]] := Module[
+	{configName,operatingSystem,versionNumber,evaluatorNames,tunnelScriptPath,kernelPath,config,configPos},
+	configName = StringTrim[name];
+	If[configName === "", Message[SetupTunnelKernelConfiguration::name, configName]; Return[$Failed]];
 	operatingSystem = OptionValue["OperatingSystem"] /. { Automatic -> SystemInformation["FrontEnd", "OperatingSystem"] };
 	versionNumber = OptionValue["VersionNumber"] /. { Automatic -> SystemInformation["FrontEnd", "VersionNumber"] };
 	tunnelScriptPath = If[ SystemInformation["FrontEnd","OperatingSystem"] === "Windows",
