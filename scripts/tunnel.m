@@ -134,7 +134,7 @@ SetupTunnelKernelConfiguration[configName_String, remoteMachine_String, OptionsP
 		StringReplace[tunnelScriptPath, "`userbaseDirectory`" -> $UserBaseDirectory] //
 		If[ Not@FileExistsQ[#], Message[SetupTunnelKernelConfiguration::missing, #] ]&
 	];
-	config={
+	config = {
 		"RemoteMachine"->True,
 		"TranslateReturns"->True,
 		"AppendNameToCellLabel"->True,
@@ -168,10 +168,10 @@ RemoteTunnelMachine[remoteMachine_String, kernelCount_Integer:1, OptionsPattern[
 		$UserBaseDirectory, "FrontEnd",
 		If[ $OperatingSystem === "Windows", "tunnel_sub.bat", "tunnel_sub.sh" ]
 	}];
-	If[ Not@FileExistsQ[tunnelScriptPath], Message[RemoteTunnelMachine::missing, tunnelScriptPath ] ];
-	loginScript = If[ $OperatingSystem === "Windows",
-		"\"\"" <> tunnelScriptPath <> "\" \"" <> remoteMachine <> "\" \"" <> kernelPath <> "\" \"`2`\"\"",
-		"\"" <> tunnelScriptPath <> "\" \"" <> remoteMachine <> "\" \"" <> kernelPath <> "\" \"`2`\"" ];
+	If[ Not@FileExistsQ[tunnelScriptPath], Message[RemoteTunnelMachine::missing, tunnelScriptPath] ];
+	loginScript = "\"" <> tunnelScriptPath <> "\" \"" <> remoteMachine <> "\" \"" <> kernelPath <> "\" \"`2`\"";
+	(* Windows needs a set of extra quotes around command to make processing with cmd.exe /C work *)
+	If[ $OperatingSystem === "Windows", loginScript = "\"" <> loginScript <> "\""];
 	RemoteMachine[ host, loginScript, kernelCount, LinkHost->"127.0.0.1", KernelSpeed->OptionValue[KernelSpeed] ]
 ]
 Options[RemoteTunnelMachine] = {"OperatingSystem"->Automatic, "VersionNumber"->Automatic, "KernelPath"->Automatic, KernelSpeed -> 1}
