@@ -13,9 +13,6 @@ RemoteTunnelMachine::missing = "Required tunnel launch script `1` does not exist
 
 Begin["`Private`"]
 
-Needs["Parallel`"]
-Needs["SubKernels`RemoteKernels`"]
-
 CreateFrontEndLinkHost[] := Module[
 	{pos,linkName,linkNameComponents,linkHost,IP4AddressPattern,IP4AddrToInteger,candidates},
 	If[ValueQ[$ParentLink] && Head[$ParentLink] === LinkObject,
@@ -178,9 +175,9 @@ RemoteTunnelMachine[remoteMachine_String, kernelCount_Integer:1, OptionsPattern[
 	loginScript = "\"" <> tunnelScriptPath <> "\" \"" <> remoteMachine <> "\" \"" <> kernelPath <> "\" \"`2`\"";
 	(* Windows needs a set of extra quotes around command to make processing with cmd.exe /C work *)
 	If[ $OperatingSystem === "Windows", loginScript = "\"" <> loginScript <> "\""];
-	RemoteMachine[ host, loginScript, kernelCount, LinkHost->"127.0.0.1", KernelSpeed->OptionValue[KernelSpeed] ]
+	SubKernels`RemoteKernels`RemoteMachine[ host, loginScript, kernelCount, LinkHost->"127.0.0.1", System`KernelSpeed->OptionValue["KernelSpeed"] ]
 ]
-Options[RemoteTunnelMachine] = {"OperatingSystem"->Automatic, "VersionNumber"->Automatic, "KernelPath"->Automatic, KernelSpeed -> 1}
+Options[RemoteTunnelMachine] = {"OperatingSystem"->Automatic, "VersionNumber"->Automatic, "KernelPath"->Automatic, "KernelSpeed" -> 1}
 
 (* override built-in function MathLink`CreateFrontEndLink with tunneling aware one *)
 
