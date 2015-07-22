@@ -146,7 +146,10 @@ SetupTunnelKernelConfiguration[configName_String, remoteMachine_String, OptionsP
 	configPos = Position[evaluatorNames, Rule[configName, _]];
 	(* upsert config in list of EvaluatorNames *)
 	evaluatorNames = If[configPos==={},
+		Print["New configuration \"" <> configName <> "\" added to kernel configuration options."];
 		Append[evaluatorNames, Rule[configName, config]],
+	(*Else*)
+		Print["Existing configuration \"" <> configName <> "\" updated in kernel configuration options."];
 		ReplacePart[evaluatorNames, First[configPos]->Rule[configName, config]]
 	];
 	(* persist updated list of EvaluatorNames *)
