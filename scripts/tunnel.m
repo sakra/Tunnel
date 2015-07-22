@@ -119,18 +119,17 @@ DefaultKernelPath[system_String, versionNumber_] :=
 	]
 
 SetupTunnelKernelConfiguration[configName_String, remoteMachine_String, OptionsPattern[]] := Module[
-	{remoteOS,kernelVersionNumber,evaluatorNames,tunnelScriptPath,kernelPath,config,configPos},
-	remoteOS = OptionValue["OperatingSystem"] /. { Automatic -> SystemInformation["FrontEnd", "OperatingSystem"] };
-	kernelVersionNumber = OptionValue["VersionNumber"] /. { Automatic -> $VersionNumber };
+	{operatingSystem,versionNumber,evaluatorNames,tunnelScriptPath,kernelPath,config,configPos},
+	operatingSystem = OptionValue["OperatingSystem"] /. { Automatic -> SystemInformation["FrontEnd", "OperatingSystem"] };
+	versionNumber = OptionValue["VersionNumber"] /. { Automatic -> SystemInformation["FrontEnd", "VersionNumber"] };
 	tunnelScriptPath = If[ SystemInformation["FrontEnd","OperatingSystem"] === "Windows",
 		"`userbaseDirectory`\\FrontEnd\\tunnel.bat",
 		"`userbaseDirectory`/FrontEnd/tunnel.sh"];
 	kernelPath = OptionValue["KernelPath"] /. {
-		Automatic -> VersionedKernelPath[remoteOS, kernelVersionNumber],
-		Default -> DefaultKernelPath[remoteOS, kernelVersionNumber]
+		Automatic -> VersionedKernelPath[operatingSystem, versionNumber],
+		Default -> DefaultKernelPath[operatingSystem, versionNumber]
 	};
-	(* there seems to be no way to check if a file exists on the front end machine *)
-	(* therefore check for installed tunnel script only if front end is using a local kernel *)
+	(* check for installed tunnel script only if front end is using a local kernel *)
 	If [ SystemInformation["FrontEnd", "MachineID"] === SystemInformation["Kernel", "MachineID"],
 		StringReplace[tunnelScriptPath, "`userbaseDirectory`" -> $UserBaseDirectory] //
 		If[ Not@FileExistsQ[#], Message[SetupTunnelKernelConfiguration::missing, #] ]&
@@ -155,12 +154,12 @@ SetupTunnelKernelConfiguration[configName_String, remoteMachine_String, OptionsP
 Options[SetupTunnelKernelConfiguration] = {"OperatingSystem"->Automatic, "VersionNumber"->Automatic, "KernelPath"->Automatic}
 
 RemoteTunnelMachine[remoteMachine_String, kernelCount_Integer:1, OptionsPattern[]] := Module[
-	{remoteOS,kernelVersionNumber,kernelPath,host,tunnelScriptPath,loginScript},
-	remoteOS = OptionValue["OperatingSystem"] /. { Automatic -> SystemInformation["FrontEnd", "OperatingSystem"] };
-	kernelVersionNumber = OptionValue["VersionNumber"] /. { Automatic -> $VersionNumber };
+	{operatingSystem,versionNumber,kernelPath,host,tunnelScriptPath,loginScript},
+	operatingSystem = OptionValue["OperatingSystem"] /. { Automatic -> $OperatingSystem };
+	versionNumber = OptionValue["VersionNumber"] /. { Automatic -> $VersionNumber };
 	kernelPath = OptionValue["KernelPath"] /. {
-		Automatic -> VersionedKernelPath[remoteOS, kernelVersionNumber],
-		Default -> DefaultKernelPath[remoteOS, kernelVersionNumber]
+		Automatic -> VersionedKernelPath[operatingSystem, versionNumber],
+		Default -> DefaultKernelPath[operatingSystem, versionNumber]
 	};
 	host = Last@StringSplit[remoteMachine, "@"];
 	tunnelScriptPath = FileNameJoin[{
