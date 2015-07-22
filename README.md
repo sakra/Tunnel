@@ -12,7 +12,7 @@ Features
 * MathLink connections to the remote kernel are tunneled over SSH. This simplifies connecting to a
   remote kernel behind a firewall or a NAT router over the Internet.
 * Works with Windows, Linux and OS X versions of *Mathematica*.
-* Compatible with *Mathematica* versions from 7.0 to 10.1.
+* Compatible with *Mathematica* versions from 8.0 to 10.2.
 
 Requirements
 ------------
