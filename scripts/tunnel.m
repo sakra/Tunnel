@@ -12,6 +12,7 @@ RemoteTunnelMachine::missing = "Required tunnel launch script `1` does not exist
 
 Begin["`Private`"]
 
+Needs["Parallel`"]
 Needs["SubKernels`RemoteKernels`"]
 
 CreateFrontEndLinkHost[] := Module[
