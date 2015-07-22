@@ -144,10 +144,12 @@ SetupTunnelKernelConfiguration[configName_String, remoteMachine_String, OptionsP
 	};
 	evaluatorNames = EvaluatorNames /. Options[$FrontEnd];
 	configPos = Position[evaluatorNames, Rule[configName, _]];
+	(* upsert config in list of EvaluatorNames *)
 	evaluatorNames = If[configPos==={},
 		Append[evaluatorNames, Rule[configName, config]],
 		ReplacePart[evaluatorNames, First[configPos]->Rule[configName, config]]
 	];
+	(* persist updated list of EvaluatorNames *)
 	SetOptions[$FrontEnd, EvaluatorNames->evaluatorNames];
 	Rule[configName, config]
 ]
