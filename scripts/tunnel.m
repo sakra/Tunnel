@@ -98,7 +98,7 @@ VersionedKernelPath[system_String, versionNumber_] :=
 			"C:\\Program Files\\Wolfram Research\\Mathematica\\" <> KernelVersionStr[versionNumber] <> "\\MathKernel.exe",
 		versionNumber >= 10.0,
 			"/usr/local/Wolfram/Mathematica/" <> KernelVersionStr[versionNumber] <> "/Executables/WolframKernel",
-		True,
+		True, (* default to Unix conventions *)
 			"/usr/local/Wolfram/Mathematica/" <> KernelVersionStr[versionNumber] <> "/Executables/MathKernel"
 	]
 
@@ -114,7 +114,7 @@ DefaultKernelPath[system_String, versionNumber_] :=
 			"MathKernel.exe",
 		versionNumber >= 10.0,
 			"/usr/local/bin/WolframKernel",
-		True,
+		True, (* default to Unix conventions *)
 			"/usr/local/bin/MathKernel"
 	]
 
