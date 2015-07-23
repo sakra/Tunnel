@@ -167,7 +167,7 @@ echo "SSH_PATH=$SSH_PATH" >> $LOGFILE
 echo "SSH_OPTS=$SSH_OPTS" >> $LOGFILE
 
 # launch kernel as a background process
-nohup "$SSH_PATH" $SSH_OPTS \
+"$SSH_PATH" $SSH_OPTS \
 	$REMOTE_KERNEL_HOST \
 	"\"$REMOTE_KERNEL_PATH\"" $REMOTE_KERNEL_OPTS \
 	>> $LOGFILE 2>&1
