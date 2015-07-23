@@ -8,8 +8,8 @@ SetupTunnelKernelConfiguration::usage = "SetupTunnelKernelConfiguration creates 
 SetupTunnelKernelConfiguration::missing = "Required tunnel launch script `1` does not exist."
 SetupTunnelKernelConfiguration::name = "Invalid configuration name \"`1`\"."
 
-RemoteTunnelMachine::usage = "RemoteTunnelMachine creates a parallel kernel RemoteMachine description for a tunneled compute kernel."
-RemoteTunnelMachine::missing = "Required tunnel launch script `1` does not exist."
+RemoteMachineTunnel::usage = "RemoteMachineTunnel creates a compute kernel RemoteMachine description using a tunneled connection."
+RemoteMachineTunnel::missing = "Required tunnel launch script `1` does not exist."
 
 Begin["`Private`"]
 
@@ -158,7 +158,7 @@ SetupTunnelKernelConfiguration[name_String, remoteMachine_String, OptionsPattern
 ]
 Options[SetupTunnelKernelConfiguration] = {"OperatingSystem"->Automatic, "VersionNumber"->Automatic, "KernelPath"->Automatic}
 
-RemoteTunnelMachine[remoteMachine_String, kernelCount_Integer:1, OptionsPattern[]] := Module[
+RemoteMachineTunnel[remoteMachine_String, kernelCount_Integer:1, OptionsPattern[]] := Module[
 	{operatingSystem,versionNumber,kernelPath,host,tunnelScriptPath,loginScript},
 	operatingSystem = OptionValue["OperatingSystem"] /. { Automatic -> $OperatingSystem };
 	versionNumber = OptionValue["VersionNumber"] /. { Automatic -> $VersionNumber };
@@ -171,13 +171,13 @@ RemoteTunnelMachine[remoteMachine_String, kernelCount_Integer:1, OptionsPattern[
 		$UserBaseDirectory, "FrontEnd",
 		If[ $OperatingSystem === "Windows", "tunnel_sub.bat", "tunnel_sub.sh" ]
 	}];
-	If[ Not@FileExistsQ[tunnelScriptPath], Message[RemoteTunnelMachine::missing, tunnelScriptPath] ];
+	If[ Not@FileExistsQ[tunnelScriptPath], Message[RemoteMachineTunnel::missing, tunnelScriptPath] ];
 	loginScript = "\"" <> tunnelScriptPath <> "\" \"" <> remoteMachine <> "\" \"" <> kernelPath <> "\" \"`2`\"";
 	(* Windows needs a set of extra quotes around command to make processing with cmd.exe /C work *)
 	If[ $OperatingSystem === "Windows", loginScript = "\"" <> loginScript <> "\""];
 	SubKernels`RemoteKernels`RemoteMachine[ host, loginScript, kernelCount, LinkHost->"127.0.0.1", System`KernelSpeed->OptionValue["KernelSpeed"] ]
 ]
-Options[RemoteTunnelMachine] = {"OperatingSystem"->Automatic, "VersionNumber"->Automatic, "KernelPath"->Automatic, "KernelSpeed" -> 1}
+Options[RemoteMachineTunnel] = {"OperatingSystem"->Automatic, "VersionNumber"->Automatic, "KernelPath"->Automatic, "KernelSpeed" -> 1}
 
 (* override built-in function MathLink`CreateFrontEndLink with tunneling aware one *)
 
