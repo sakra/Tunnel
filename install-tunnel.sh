@@ -28,11 +28,11 @@ fi
 
 # install kernel init file
 mkdir -v -p "${MATHEMATICA_BASE}/Kernel"
-cp -f -v scripts/tunnel.m "${MATHEMATICA_BASE}/Kernel"
+cp -p -f -v scripts/tunnel.m "${MATHEMATICA_BASE}/Kernel"
 
 # install shell script helpers
 mkdir -v -p "${MATHEMATICA_USERBASE}/FrontEnd"
-cp -f -v scripts/tunnel.sh "${MATHEMATICA_USERBASE}/FrontEnd"
+cp -p -f -v scripts/tunnel.sh "${MATHEMATICA_USERBASE}/FrontEnd"
 chmod +x "${MATHEMATICA_USERBASE}/FrontEnd/tunnel.sh"
-cp -f -v scripts/tunnel_sub.sh "${MATHEMATICA_USERBASE}/FrontEnd"
+cp -p -f -v scripts/tunnel_sub.sh "${MATHEMATICA_USERBASE}/FrontEnd"
 chmod +x "${MATHEMATICA_USERBASE}/FrontEnd/tunnel_sub.sh"
