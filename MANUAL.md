@@ -229,29 +229,30 @@ new method `RemoteMachineTunnel`.
 
 `RemoteMachineTunnel` acts as a thin wrapper around the existing `RemoteMachine` connection method
 and takes care of handling all the nasty details (e.g., MathLink options, kernel file path and
-quoting) for launching remote compute kernels.
+quoting) of launching remote compute kernels correctly.
 
-To make use of the connection method `RemoteMachineTunnel`, first load the `SubKernels` package in
-a *Mathematica* session:
+To make use of the connection method `RemoteMachineTunnel`, first load the `RemoteKernels` package
+in a *Mathematica* session:
 
-    In[1]:= Needs["SubKernels`"]
+    In[1]:= Needs["SubKernels`RemoteKernels`"]
 
 Then load the `tunnel.m` script, which defines `RemoteMachineTunnel`:
 
     In[2]:= Get["tunnel.m"]
 
-`RemoteMachineTunnel` only needs a remote host specification and some options:
+`RemoteMachineTunnel` needs a remote host specification, the number of compute kernels to launch
+and options:
 
-    In[3]:= kernel=RemoteMachineTunnel["john@host.example.com", "OperatingSystem"->"Windows"]
-    Out[3]= <<a kernel on host.example.com>>
+    In[3]:= kernels=RemoteMachineTunnel["john@host.example.com", 2, "OperatingSystem"->"Unix"]
+    Out[3]= <<2 kernels on host.example.com>>
 
 The remote host specification uses the syntax `[user[:password]@]remote_machine[:port]`.
 Valid examples are `192.168.1.10:2222`, `john@host.local` or `john:123456@host.example.com`.
 
-Then, to launch the remote compute kernel through an SSH tunnel, enter:
+Then, to launch the remote compute kernels through an SSH tunnel, enter:
 
-    In[4]:= LaunchKernels[kernel]
-    Out[4]= {"KernelObject"[1, "host.example.com"]}
+    In[4]:= LaunchKernels[kernels]
+    Out[4]= {KernelObject[1, "host.example.com"], KernelObject[2, "host.example.com"]}
 
 `RemoteMachineTunnel` supports the following options:
 
@@ -269,9 +270,9 @@ given operating system and version number.
 To set up a remote compute kernel without the aid of the `RemoteMachineTunnel` method, use the
 configuration features of the built-in `RemoteMachine` method in the following way:
 
-First load the `SubKernels` package in a *Mathematica* session:
+First load the `RemoteKernels` package in a *Mathematica* session:
 
-    Needs["SubKernels`"]
+    Needs["SubKernels`RemoteKernels`"]
 
 Depending on the operating system used on the controller kernel machine and on the remote compute
 kernel machine, choose the appropriate command from below. The path to the *Mathematica* kernel may
