@@ -118,6 +118,7 @@ DefaultKernelPath[system_String, versionNumber_] :=
 
 SetupTunnelKernelConfiguration[name_String, remoteMachine_String, OptionsPattern[]] := Module[
 	{configName,operatingSystem,versionNumber,evaluatorNames,tunnelScriptPath,kernelPath,config,configPos},
+	If[$FrontEnd === Null, Message[FrontEndObject::notavail]; Return[$Failed]];
 	configName = StringTrim[name];
 	If[configName === "", Message[SetupTunnelKernelConfiguration::name, configName]; Return[$Failed]];
 	operatingSystem = OptionValue["OperatingSystem"] /. { Automatic -> SystemInformation["FrontEnd", "OperatingSystem"] };
