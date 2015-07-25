@@ -1,8 +1,9 @@
 ## 1.1.0
 
 * Add *Mathematica* 10.2 support.
+* Use WSTP instead of MathLink for *Mathematica* 10 or later.
 * Add convenience function `SetupTunnelKernelConfiguration` for easy setting up of remote controller kernel configurations.
-* Add convenience function `RemoteTunnelMachine` for easy configuration of tunneled remote compute kernels.
+* Add convenience function `RemoteMachineTunnel` for easy configuration of tunneled remote compute kernels.
 * Enable SSH agent forwarding in SSH connection.
 * Manual updates.
 
