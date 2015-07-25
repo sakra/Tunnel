@@ -19,7 +19,7 @@ Features
 * MathLink connections to the remote kernel are tunneled over SSH. This simplifies connecting to a
   remote kernel behind a firewall or a NAT router over the Internet.
 * Works with Windows, Linux and OS X versions of *Mathematica*.
-* Compatible with *Mathematica* versions from 7.0 to 10.1.
+* Compatible with *Mathematica* versions from 8.0 to 10.2.
 
 Requirements
 ------------
@@ -106,22 +106,74 @@ server by enabling Remote Login in the Sharing panel of the System Preferences a
 Install [PuTTY][putty] on the local front end machine.
 
 On the remote kernel machine an SSH server needs to be installed. Tunnel has been tested with the
-following third party SSH servers:
+following third party SSH server software:
 
   * [Bitvise SSH Server][winsshd]
   * [Cygwin][cygwin] OpenSSH is a heavy weight solution that you should only consider, if you are
     comfortable with a POSIX shell environment.
-  * [freeSSHd][freesshd]
 
-Configuration
--------------
+Configuration Of Remote Controller Kernels
+------------------------------------------
 
-### Remote controller kernels
+### programmatic configuration
+
+Normally kernel configurations need to be defined interactively in the *Mathematica* front end's
+Kernel Configuration Options dialog accesible from the Evaluation menu. The Tunnel package
+comes with a convenience function `SetupTunnelKernelConfiguration`, which helps you set up
+persistent controller kernel configurations programmatically. The function automatically handles
+all the nasty details (e.g., MathLink options, kernel file path and quoting) correctly.
+
+In the *Mathematica* front end, first load the `tunnel.m` script:
+
+    In[1]:= Get["tunnel.m"]
+
+Then call `SetupTunnelKernelConfiguration` with a title and a remote host specification:
+
+    In[2]:= SetupTunnelKernelConfiguration["Example","john@host.example.com",
+             "OperatingSystem"->"Windows", "VersionNumber"->10.1]
+    New configuration "Example" added to kernel configuration options.
+    Out[2]= Example->{
+              RemoteMachine->True,
+              TranslateReturns->True,
+              AppendNameToCellLabel->True,
+              AutoStartOnLaunch->False,
+              MLOpenArguments->-LinkMode Listen -LinkProtocol TCPIP -LinkOptions MLDontInteract -LinkHost 127.0.0.1,
+              LoginScript->"`userbaseDirectory`/FrontEnd/tunnel.sh" "john@host.example.com" "C:\Program Files\Wolfram Research\Mathematica\10.1\WolframKernel.exe" "`linkname`"
+            }
+
+The command returns the properties of the newly generated configuration. As a side effect, a
+persistent kernel configuration is created in the front end settings, as shown in the following
+snapshot:
+
+![](https://github.com/sakra/Tunnel/blob/master/images/kernel_configuration.png)
+
+If a persistent kernel configuration already exists under the given title, its properties are
+updated.
+
+The remote host specification uses the syntax `[user[:password]@]remote_machine[:port]`.
+Valid examples are `192.168.1.10:2222`, `john@host.local` or `john:123456@host.example.com`.
+
+If the password is not specified as part of the remote host specification, the SSH server on the
+remote kernel machine has to be configured to allow for password-less SSH logins. You may also need
+to run an SSH authentication agent (e.g., ssh-agent or Pageant) on the local front end machine.
+
+`SetupTunnelKernelConfiguration` supports the following options:
+
+* `"OperatingSystem"` specifies the operation system of the remote controller kernel. Possible
+values are `"Windows"`, `"MacOSX"` or `"Unix"`. If omitted, it defaults to the operation system of
+the *Mathematica* front end.
+* `"VersionNumber"` is a real number which specifies the remote controller kernel version number.
+It defaults to the version number of the *Mathematica* front end.
+* `"KernelPath"` specifies the full path to the controller kernel on the remote machine.
+If omitted, it is initialized to the default installation path of the *Mathematica* kernel,
+depending on the given operating system and version number.
+
+### interactive configuration
 
 To set up launching of a remote *Mathematica* controller kernel with Tunnel in the *Mathematica*
-front end, choose the menu command `Kernel Configuration Options...` from the `Evaluation` menu and
-create a new kernel configuration. In the kernel configuration dialog activate the
-`Advanced Options` and configure the two text boxes below as follows.
+front end interactively, choose the menu command `Kernel Configuration Options...` from the
+`Evaluation` menu and create a new kernel configuration. In the kernel configuration dialog
+activate the `Advanced Options` and configure the two text boxes below as follows.
 
 Arguments To MLOpen:
 
@@ -158,10 +210,6 @@ Local Windows front end and remote Windows controller kernel:
 
     "`userbaseDirectory`\FrontEnd\tunnel.bat" "john@host.example.com" "C:\Program Files\Wolfram Research\Mathematica\10.1\math.exe" "`linkname`"
 
-The following screen shot shows how to enter the configuration strings in the correct fields:
-
-![](https://github.com/sakra/Tunnel/blob/master/images/kernel_configuration.png)
-
 Note that `userbaseDirectory` and `linkname` must be entered verbatim. For controller kernels
 `userbaseDirectory` will be automatically replaced with the path to the user-specific *Mathematica*
 base directory. `linkname` will be replaced with the name of the main link created by the front end
@@ -170,16 +218,60 @@ upon connecting.
 The remote host specification uses the syntax `[user[:password]@]remote_machine[:port]`.
 Valid examples are `192.168.1.10:2222`, `john@host.local` or `john:123456@host.example.com`.
 
-If the password is not specified as part of the remote host specification, the SSH server on the
-remote kernel machine has to be configured to allow for password-less SSH logins. You may also need
-to run an SSH authentication agent (e.g., ssh-agent or Pageant) on the local front end machine.
+Configuration Of Remote Compute Kernels
+---------------------------------------
 
-### Remote compute kernels
+The Wolfram Language supports different connection methods for compute kernels. See the page
+[Launching and Connecting][connectionmethods] for more information. The Tunnel package adds a
+new method `RemoteMachineTunnel`.
 
-To launch a remote compute kernel with Tunnel, first load the `RemoteKernels` package in a
-*Mathematica* session:
+### using connection method RemoteMachineTunnel
 
-    Needs["SubKernels`RemoteKernels`"]
+`RemoteMachineTunnel` acts as a thin wrapper around the existing `RemoteMachine` connection method
+and takes care of handling all the nasty details (e.g., MathLink options, kernel file path and
+quoting) for launching remote compute kernels.
+
+To make use of the connection method `RemoteMachineTunnel`, first load the `SubKernels` package in
+a *Mathematica* session:
+
+    In[1]:= Needs["SubKernels`"]
+
+Then load the `tunnel.m` script, which defines `RemoteMachineTunnel`:
+
+    In[2]:= Get["tunnel.m"]
+
+`RemoteMachineTunnel` only needs a remote host specification and some options:
+
+    In[3]:= kernel=RemoteMachineTunnel["john@host.example.com", "OperatingSystem"->"Windows"]
+    Out[3]= <<a kernel on host.example.com>>
+
+The remote host specification uses the syntax `[user[:password]@]remote_machine[:port]`.
+Valid examples are `192.168.1.10:2222`, `john@host.local` or `john:123456@host.example.com`.
+
+Then, to launch the remote compute kernel through an SSH tunnel, enter:
+
+    In[4]:= LaunchKernels[kernel]
+    Out[4]= {"KernelObject"[1, "host.example.com"]}
+
+`RemoteMachineTunnel` supports the following options:
+
+* `"OperatingSystem"` specifies the operation system of the remote compute kernel. Possible
+values are `"Windows"`, `"MacOSX"` or `"Unix"`. If omitted, it defaults to the operation system of
+the *Mathematica* controller kernel.
+* `"VersionNumber"` is a real number which specifies the remote compute kernel version number.
+It defaults to the version number of the *Mathematica* controller kernel.
+* `"KernelPath"` specifies the full path to the compute kernel on the remote machine. If omitted,
+it is initialized to the default installation path of the *Mathematica* kernel, depending on the
+given operating system and version number.
+
+### using connection method RemoteMachine
+
+To set up a remote compute kernel without the aid of the `RemoteMachineTunnel` method, use the
+configuration features of the built-in `RemoteMachine` method in the following way:
+
+First load the `SubKernels` package in a *Mathematica* session:
+
+    Needs["SubKernels`"]
 
 Depending on the operating system used on the controller kernel machine and on the remote compute
 kernel machine, choose the appropriate command from below. The path to the *Mathematica* kernel may
@@ -231,9 +323,6 @@ Then, to launch a remote compute kernel, enter:
 
 Replace the example remote host specification `john@host.example.com` with your actual remote host.
 
-The remote host specification uses the syntax `[user[:password]@]remote_machine[:port]`.
-Valid examples are `192.168.1.10:2222`, `john@host.local` or `john:123456@host.example.com`.
-
 Alternatively, the template command in `$RemoteCommand` can also be specified as part of the
 `RemoteMachine` specifier:
 
@@ -242,8 +331,6 @@ Alternatively, the template command in `$RemoteCommand` can also be specified as
         "/FrontEnd/tunnel_sub.sh\" \"`1`\" \"/usr/local/Wolfram/Mathematica/10.1/Executables/MathKernel\" \"`2`\"",
         LinkHost->"127.0.0.1"]
     LaunchKernels[kernel]
-
-See [Launching and Connecting][connectionmethods] for more information.
 
 Troubleshooting
 ---------------
