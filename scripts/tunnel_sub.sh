@@ -150,6 +150,13 @@ SSH_OPTS="$SSH_OPTS -f"
 REMOTE_KERNEL_OPTS="$REMOTE_KERNEL_OPTS -subkernel -noinit"
 # no local port forwardings required for compute kernels
 
+# remove Mathematica SystemFiles/Libraries dir from LD_LIBRARY_PATH
+# the libcrypto.so in SystemFiles/Libraries may be incompatible with /usr/bin/ssh
+if [ -n "$LD_LIBRARY_PATH" ]
+then
+	export LD_LIBRARY_PATH=`echo $LD_LIBRARY_PATH | awk -v RS=: -v ORS=: '/SystemFiles/Libraries/ {next} {print}'`
+fi
+
 # log everything
 echo "REMOTE_KERNEL_ADDRESS=$REMOTE_KERNEL_ADDRESS" >> $LOGFILE
 echo "REMOTE_KERNEL_HOST=$REMOTE_KERNEL_HOST" >> $LOGFILE
@@ -165,6 +172,7 @@ echo "MAIN_LINK_MESSAGE_PORT=$MAIN_LINK_MESSAGE_PORT" >> $LOGFILE
 echo "MAIN_LINK_LOOPBACK=$MAIN_LINK_LOOPBACK" >> $LOGFILE
 echo "SSH_PATH=$SSH_PATH" >> $LOGFILE
 echo "SSH_OPTS=$SSH_OPTS" >> $LOGFILE
+echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH" >> $LOGFILE
 
 # launch kernel as a background process
 "$SSH_PATH" $SSH_OPTS \
