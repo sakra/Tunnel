@@ -1,3 +1,7 @@
+## 1.1.1 (2015-08-04)
+
+* add work-around for `SystemFiles/Libraries/libcrypto.so` incompatibility with `/usr/bin/ssh` under Linux.
+
 ## 1.1.0 (2015-07-25)
 
 * use WSTP instead of MathLink for *Mathematica* 10 or later.
