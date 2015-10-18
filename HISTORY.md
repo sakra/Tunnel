@@ -1,3 +1,9 @@
+## 1.1.2 (2015-10-18)
+
+* *Mathematica* 10.3 compatibility.
+* fix bug with handing of missing evaluator settings in `SetupTunnelKernelConfiguration`.
+* when using OpenSSH, set option `ServerAliveInterval` to keep connection alive.
+
 ## 1.1.1 (2015-08-04)
 
 * add work-around for `SystemFiles/Libraries/libcrypto.so` incompatibility with `/usr/bin/ssh` under Linux.
