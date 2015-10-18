@@ -143,7 +143,7 @@ SetupTunnelKernelConfiguration[name_String, remoteMachine_String, OptionsPattern
 		"MLOpenArguments"->"-LinkMode Listen -LinkProtocol TCPIP -LinkOptions MLDontInteract -LinkHost 127.0.0.1",
 		"LoginScript"->"\"" <> tunnelScriptPath <> "\" \"" <> remoteMachine <> "\" \"" <> kernelPath <> "\" \"`linkname`\""
 	};
-	evaluatorNames = EvaluatorNames /. Options[$FrontEnd];
+	evaluatorNames = EvaluatorNames /. Options[$FrontEnd] /. {EvaluatorNames -> {"Local" -> {"AutoStartOnLaunch" -> True}}};
 	configPos = Position[evaluatorNames, Rule[configName, _]];
 	(* upsert config in list of EvaluatorNames *)
 	evaluatorNames = If[configPos==={},
