@@ -26,7 +26,7 @@ Requirements
 Installation
 ------------
 
-Execute the shell script `install-tunnel.sh` under Linux or OS X to install the required scripts
+Under Linux or OS X, execute the shell script `install-tunnel.sh` to install the required scripts
 to the correct locations for an existing *Mathematica* installation. Under Windows, execute the
 batch script `install-tunnel.bat` to install the required scripts.
 
@@ -41,10 +41,10 @@ Usage
 
 See the [Tunnel manual][manual] for information on
 
- * how to set up remote controller kernel configurations using the Tunnel scripts in the
+ * How to set up remote controller kernel configurations using the Tunnel scripts in the
    *Mathematica* front end kernel configuration options dialog.
- * how to set up remote compute kernels with the *Mathematica* Parallel package.
- * technical background information.
+ * How to set up remote compute kernels with the *Mathematica* Parallel package.
+ * Technical background information.
 
 
 [manual]:https://github.com/sakra/Tunnel/blob/master/MANUAL.md

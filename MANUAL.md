@@ -32,7 +32,7 @@ Requirements
 Installation
 ------------
 
-### script-aided installation
+### Script-aided Installation
 
 Execute the shell script `install-tunnel.sh` under Linux or OS X to install the required scripts
 to the correct locations for an existing *Mathematica* installation. Under Windows, execute the
@@ -41,7 +41,7 @@ batch script `install-tunnel.bat` to install the required scripts.
 The installation must be performed on both the local machine that runs the *Mathematica* front end,
 and on the remote machine that runs the *Mathematica* kernel.
 
-### manual installation
+### Manual Installation
 
 The file `tunnel.m` needs to be installed on the remote *Mathematica* kernel machine. It needs to
 be placed into the `Kernel` sub-directory of the *Mathematica* base directory. To determine the
@@ -115,10 +115,10 @@ following third party SSH server software:
 Configuration Of Remote Controller Kernels
 ------------------------------------------
 
-### programmatic configuration
+### Programmatic Configuration
 
 Normally kernel configurations need to be defined interactively in the *Mathematica* front end's
-Kernel Configuration Options dialog accessible from the Evaluation menu. The Tunnel package
+Kernel Configuration Options dialog accessible from the `Evaluation` menu. The Tunnel package
 comes with a convenience function `SetupTunnelKernelConfiguration`, which helps you set up
 persistent controller kernel configurations programmatically. The function automatically handles
 all the nasty details (e.g., MathLink options, kernel file path and quoting) correctly.
@@ -168,7 +168,7 @@ It defaults to the version number of the *Mathematica* front end.
 If omitted, it is initialized to the default installation path of the *Mathematica* kernel,
 depending on the given operating system and version number.
 
-### interactive configuration
+### Interactive Configuration
 
 To set up launching of a remote *Mathematica* controller kernel with Tunnel in the *Mathematica*
 front end interactively, choose the menu command `Kernel Configuration Options...` from the
@@ -225,7 +225,7 @@ The Wolfram Language supports different connection methods for compute kernels. 
 [Launching and Connecting][connectionmethods] for more information. The Tunnel package adds a
 new method `RemoteMachineTunnel`.
 
-### using connection method RemoteMachineTunnel
+### Connection Method `RemoteMachineTunnel`
 
 `RemoteMachineTunnel` acts as a thin wrapper around the existing `RemoteMachine` connection method
 and takes care of handling all the nasty details (e.g., MathLink options, kernel file path and
@@ -265,7 +265,7 @@ It defaults to the version number of the *Mathematica* controller kernel.
 it is initialized to the default installation path of the *Mathematica* kernel, depending on the
 given operating system and version number.
 
-### using connection method RemoteMachine
+### Connection Method `RemoteMachine`
 
 To set up a remote compute kernel without the aid of the `RemoteMachineTunnel` method, use the
 configuration features of the built-in `RemoteMachine` method in the following way:
@@ -378,7 +378,7 @@ the SSH client in the sshd log file.
 Technical background
 --------------------
 
-### Remote controller kernel launching
+### Remote Controller Kernel Launching
 
 Starting with *Mathematica* version 6, the front end and controller kernel communicate with each
 other through several MathLink connections, known as the main link, the preemptive link and the
@@ -403,7 +403,7 @@ service link is more tricky. The kernel init file `tunnel.m` replaces the built-
 `CreateFrontEndLink` with an alternate implementation that makes the kernel use in-advance
 forwarded TCP/IP ports for the TCP/IP channels of the preemptive and the service link.
 
-### Remote compute kernel launching
+### Remote Compute Kernel Launching
 
 A controller kernel and a remote compute kernel communicate with each other through one MathLink
 connection. When a remote compute kernel is launched, this link is established as a callback
