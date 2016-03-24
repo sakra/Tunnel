@@ -1,7 +1,7 @@
 @echo off
 rem tunnel script for launching remote Mathematica compute kernels
 rem See https://github.com/sakra/Tunnel/blob/master/MANUAL.md for usage hints.
-rem Copyright 2015 Sascha Kratky, see accompanying license file.
+rem Copyright 2015-2016 Sascha Kratky, see accompanying license file.
 
 setlocal enabledelayedexpansion
 

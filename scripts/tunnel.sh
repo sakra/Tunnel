@@ -1,7 +1,7 @@
 #!/bin/bash
 # tunnel script for launching remote Mathematica controller kernels.
 # See https://github.com/sakra/Tunnel/blob/master/MANUAL.md for usage hints.
-# Copyright 2015 Sascha Kratky, see accompanying license file.
+# Copyright 2015-2016 Sascha Kratky, see accompanying license file.
 
 cd "`dirname \"$0\"`"
 

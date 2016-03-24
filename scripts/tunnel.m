@@ -1,6 +1,6 @@
 (* kernel init file which allows for tunneling MathLink connections to a remote Mathematica kernel through SSH. *)
 (* See https://github.com/sakra/Tunnel/blob/master/MANUAL.md for usage hints. *)
-(* Copyright 2015 Sascha Kratky, see accompanying license file. *)
+(* Copyright 2015-2016 Sascha Kratky, see accompanying license file. *)
 
 BeginPackage["MathLink`Tunnel`"]
 
