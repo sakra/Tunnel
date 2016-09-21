@@ -1,3 +1,9 @@
+## 1.1.3 (2016-09-21)
+
+* *Mathematica* 11 compatibility.
+* Use `-remotelaunch` switch upon launching remote kernel.
+* remove option `ServerAliveInterval` which is better handled as an SSH client side configuration.
+
 ## 1.1.2 (2015-10-18)
 
 * *Mathematica* 10.3 compatibility.
