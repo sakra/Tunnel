@@ -154,7 +154,7 @@ rem Mathematica kernel options
 rem force loading of the tunnel kernel init file
 set REMOTE_KERNEL_OPTS=!REMOTE_KERNEL_OPTS! -initfile tunnel.m
 rem -lmverbose print information to stderr on connecting to the license manager
-set REMOTE_KERNEL_OPTS=!REMOTE_KERNEL_OPTS! -lmverbose
+set REMOTE_KERNEL_OPTS=!REMOTE_KERNEL_OPTS! -lmverbose -remotelaunch
 
 rem controller kernel specific options
 rem the front end requires the launch command to stick around until kernel quits

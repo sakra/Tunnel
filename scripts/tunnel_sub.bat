@@ -148,7 +148,7 @@ rem the Remote Kernels connection method requires the launch command to return i
 rem thus we need to launch PuTTY as a background process
 set START_OPTS=/MIN /B
 rem compute kernel needs -subkernel switch
-set REMOTE_KERNEL_OPTS=!REMOTE_KERNEL_OPTS! -subkernel -noinit
+set REMOTE_KERNEL_OPTS=!REMOTE_KERNEL_OPTS! -subkernel -noinit -remotelaunch
 rem no local port forwardings required for compute kernels
 
 rem use short path form of PuTTY path to work around "start" command limitation.

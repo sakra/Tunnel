@@ -147,7 +147,7 @@ REMOTE_KERNEL_OPTS="$REMOTE_KERNEL_OPTS -lmverbose"
 # thus we are adding option -f to launch SSH client as a background process
 SSH_OPTS="$SSH_OPTS -f"
 # compute kernel needs -subkernel switch
-REMOTE_KERNEL_OPTS="$REMOTE_KERNEL_OPTS -subkernel -noinit"
+REMOTE_KERNEL_OPTS="$REMOTE_KERNEL_OPTS -subkernel -noinit -remotelaunch"
 # no local port forwardings required for compute kernels
 
 # remove Mathematica SystemFiles/Libraries dir from LD_LIBRARY_PATH

@@ -149,7 +149,7 @@ REMOTE_KERNEL_OPTS="$REMOTE_KERNEL_OPTS -LinkMode Connect -LinkProtocol TCPIP -L
 # force loading of the Tunnel kernel init file
 REMOTE_KERNEL_OPTS="$REMOTE_KERNEL_OPTS -initfile tunnel.m"
 # -lmverbose print information to stderr on connecting to the license manager
-REMOTE_KERNEL_OPTS="$REMOTE_KERNEL_OPTS -lmverbose"
+REMOTE_KERNEL_OPTS="$REMOTE_KERNEL_OPTS -lmverbose -remotelaunch"
 
 # controller kernel specific options
 # the front end requires the launch command to stick around until kernel quits
