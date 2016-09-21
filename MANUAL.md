@@ -375,7 +375,7 @@ level of `sshd`. Open the `sshd` config file (usually `/etc/sshd_config`), locat
 and restart `sshd`. The level `DEBUG3` gives you detailed information about the commands sent by
 the SSH client in the sshd log file.
 
-Technical background
+Technical Background
 --------------------
 
 ### Remote Controller Kernel Launching
@@ -410,7 +410,8 @@ connection. When a remote compute kernel is launched, this link is established a
 connection from the compute kernel machine to the controller kernel machine.
 
 The tunnel script takes care of forwarding the TCP/IP channels used for this link from the remote
-compute kernel machine to the controller kernel machine.
+compute kernel machine to the controller kernel machine. Installing the kernel init file `tunnel.m`
+is not a requirement for remote compute kernel launching.
 
 [connectionmethods]:http://reference.wolfram.com/language/ParallelTools/tutorial/ConnectionMethods.html
 [cygwin]:https://www.cygwin.com/
