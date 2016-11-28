@@ -1,3 +1,7 @@
+## 1.1.4 (2016-11-28)
+
+* add jump host usage section to manual.
+
 ## 1.1.3 (2016-09-21)
 
 * *Mathematica* 11 compatibility.
