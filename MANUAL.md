@@ -333,6 +333,30 @@ Alternatively, the template command in `$RemoteCommand` can also be specified as
         LinkHost->"127.0.0.1"]
     LaunchKernels[kernel]
 
+Using a Jump Host
+-----------------
+
+Under Linux and OS X, Tunnel also supports launching a *Mathematica* kernel on a remote machine
+through an [SSH jump host][jumphost].
+
+In the OpenSSH configuration file `~/.ssh/config` on the local front end machine, add a `Host`
+configuration that specifies a `ProxyCommand` to forward SSH traffic to the actual remote
+*Mathematica* kernel machine:
+
+    Host jumphost.example.com
+        HostName math.example.com
+        ProxyCommand ssh jumphost.example.com -q -W %h:%p
+
+Then set up a controller kernel configuration for `jumphost.example.com`:
+
+    In[1]:= Get["tunnel.m"]
+    In[2]:= SetupTunnelKernelConfiguration["MathJump","john@jumphost.example.com",
+             "OperatingSystem"->"Unix"]
+
+Also note that the OpenSSH option `AllowTcpForwarding` must be set to `Yes` in the `sshd`
+config file (usually `/etc/sshd_config`) on the jump host machine. See the
+[sshd_config man page][sshd_config] for more information.
+
 Troubleshooting
 ---------------
 
@@ -417,8 +441,10 @@ is not a requirement for remote compute kernel launching.
 [cygwin]:https://www.cygwin.com/
 [dynamic]:http://reference.wolfram.com/language/tutorial/AdvancedDynamicFunctionality.html
 [freesshd]:http://www.freesshd.com/
+[jumphost]:https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts#Passing_Through_One_or_More_Gateways_Using_ProxyJump
 [putty]:http://www.chiark.greenend.org.uk/~sgtatham/putty
 [remote_kernel_strategies]:http://library.wolfram.com/infocenter/Conferences/7250/
+[sshd_config]:http://www.manpagez.com/man/5/sshd_config/
 [winsshd]:http://www.bitvise.com/ssh-server-download
 [wmma]:http://www.wolfram.com/mathematica/
 [wstp]:https://reference.wolfram.com/language/guide/WSTPAPI.html
