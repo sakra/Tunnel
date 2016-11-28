@@ -112,7 +112,7 @@ following third party SSH server software:
   * [Cygwin][cygwin] OpenSSH is a heavy weight solution that you should only consider, if you are
     comfortable with a POSIX shell environment.
 
-Configuration Of Remote Controller Kernels
+Configuration of Remote Controller Kernels
 ------------------------------------------
 
 ### Programmatic Configuration
@@ -218,7 +218,7 @@ upon connecting.
 The remote host specification uses the syntax `[user[:password]@]remote_machine[:port]`.
 Valid examples are `192.168.1.10:2222`, `john@host.local` or `john:123456@host.example.com`.
 
-Configuration Of Remote Compute Kernels
+Configuration of Remote Compute Kernels
 ---------------------------------------
 
 The Wolfram Language supports different connection methods for compute kernels. See the page
