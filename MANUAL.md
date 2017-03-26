@@ -19,7 +19,7 @@ Features
 * MathLink connections to the remote kernel are tunneled over SSH. This simplifies connecting to a
   remote kernel behind a firewall or a NAT router over the Internet.
 * Works with Windows, Linux and OS X versions of *Mathematica*.
-* Compatible with *Mathematica* versions from 8 to 11.
+* Compatible with *Mathematica* versions from 8.0 to 11.0.
 
 Requirements
 ------------
@@ -402,7 +402,7 @@ the SSH client in the sshd log file.
 Technical Background
 --------------------
 
-### Remote Controller Kernel Launching
+### Remote Controller Kernel Launching (Version 6 to Version 11.0)
 
 Starting with *Mathematica* version 6, the front end and controller kernel communicate with each
 other through several MathLink connections, known as the main link, the preemptive link and the
@@ -436,6 +436,13 @@ connection from the compute kernel machine to the controller kernel machine.
 The tunnel script takes care of forwarding the TCP/IP channels used for this link from the remote
 compute kernel machine to the controller kernel machine. Installing the kernel init file `tunnel.m`
 is not a requirement for remote compute kernel launching.
+
+Known Issues
+------------
+
+Tunnel enabled remote controller kernel launching no longer works for *Mathematica* 11.1, because
+Wolfram has switched to a new method of establishing the parallel links between the front end and
+the controller kernel. Tunnel enabled remote compute controller kernel launching works, though.
 
 [connectionmethods]:http://reference.wolfram.com/language/ParallelTools/tutorial/ConnectionMethods.html
 [cygwin]:https://www.cygwin.com/

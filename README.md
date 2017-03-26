@@ -12,7 +12,7 @@ Features
 * MathLink connections to the remote kernel are tunneled over SSH. This simplifies connecting to a
   remote kernel behind a firewall or a NAT router over the Internet.
 * Works with Windows, Linux and OS X versions of *Mathematica*.
-* Compatible with *Mathematica* versions from 8 to 11.
+* Compatible with *Mathematica* versions from 8.0 to 11.0.
 
 Requirements
 ------------
@@ -45,6 +45,13 @@ See the [Tunnel manual][manual] for information on
    *Mathematica* front end kernel configuration options dialog.
  * How to set up remote compute kernels with the *Mathematica* Parallel package.
  * Technical background information.
+
+Known Issues
+------------
+
+Tunnel enabled remote controller kernel launching no longer works for *Mathematica* 11.1, because
+Wolfram has switched to a new method of establishing the parallel links between the front end and
+the controller kernel. Tunnel enabled remote compute controller kernel launching works, though.
 
 
 [manual]:https://github.com/sakra/Tunnel/blob/master/MANUAL.md
