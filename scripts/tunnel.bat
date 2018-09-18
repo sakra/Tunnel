@@ -17,22 +17,31 @@ echo !CMDCMDLINE! >> "%LOGFILE%"
 echo "%~0" "%*" >> "%LOGFILE%"
 
 rem path to PuTTY plink executable, see http://www.putty.org/
-if defined ProgramFiles^(x86^) (
-	set PLINK_EXE_PATH=!ProgramFiles^(x86^)!\putty\plink.exe
-) else if defined ProgramFiles (
+if defined ProgramFiles (
 	set PLINK_EXE_PATH=!ProgramFiles!\putty\plink.exe
 ) else (
 	set PLINK_EXE_PATH=C:\Program Files\putty\plink.exe
 )
+if not exist "%PLINK_EXE_PATH%" (
+	if defined ProgramFiles^(x86^) (
+		set PLINK_EXE_PATH=!ProgramFiles^(x86^)!\putty\plink.exe
+	)
+)
 
 rem path to alternate PuTTY plinkw executable from Quest, see http://rc.quest.com/topics/putty/
-if defined ProgramFiles^(x86^) (
-	set PLINKW_EXE_PATH=!ProgramFiles^(x86^)!\Quest Software\PuTTY\plinkw.exe
-) else if defined ProgramFiles (
+if defined ProgramFiles (
 	set PLINKW_EXE_PATH=!ProgramFiles!\Quest Software\PuTTY\plinkw.exe
 ) else (
 	set PLINKW_EXE_PATH=C:\Program Files\Quest Software\PuTTY\plinkw.exe
 )
+if not exist "%PLINKW_EXE_PATH%" (
+	if defined ProgramFiles^(x86^) (
+		set PLINKW_EXE_PATH=!ProgramFiles^(x86^)!\Quest Software\PuTTY\plinkw.exe
+	)
+)
+
+echo PLINK_EXE_PATH=!PLINK_EXE_PATH! >> "%LOGFILE%"
+echo PLINKW_EXE_PATH=!PLINKW_EXE_PATH! >> "%LOGFILE%"
 
 rem prefer Quest PuTTY plink.exe, as it does not open a console window
 rem and allows for redirection of stdout and stderr to log file
